@@ -1,0 +1,13 @@
+diff --git a/node_modules/gatsby/dist/schema/graphql-engine/bundle-webpack.js b/node_modules/gatsby/dist/schema/graphql-engine/bundle-webpack.js
+index b328a20..0a47f56 100644
+--- a/node_modules/gatsby/dist/schema/graphql-engine/bundle-webpack.js
++++ b/node_modules/gatsby/dist/schema/graphql-engine/bundle-webpack.js
+@@ -95,7 +95,7 @@ async function createGraphqlEngineBundle(rootDir, reporter, isVerbose) {
+           use: [assetRelocatorUseEntry, {
+             loader: require.resolve(`./lmdb-bundling-patch`),
+             options: {
+-              forcedBinaryModule: _redux.store.getState().adapter.instance ? `@lmdb/lmdb-${process.platform}-${process.arch}/node.abi83.glibc.node` : undefined
++              forcedBinaryModule: _redux.store.getState().adapter.instance ? `@lmdb/lmdb-${process.platform}-${process.arch}/node.abi108.glibc.node` : undefined
+             }
+           }]
+         }, {
