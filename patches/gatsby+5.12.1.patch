@@ -1,3 +1,71 @@
+diff --git a/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js b/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
+index 17b1e3a..2ed14b4 100644
+--- a/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
++++ b/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
+@@ -74,6 +74,7 @@ function getDatabases() {
+     if (databases) {
+       return databases;
+     }
++    console.log(`-> opening dbs`)
+     const rootDb = getRootDb();
+     databases = {
+       nodes: rootDb.openDB({
+@@ -102,6 +103,7 @@ function getDatabases() {
+         // dupSort: true
+       })
+     };
++    console.log(`-> opened dbs`)
+ 
+     globalThis.__GATSBY_OPEN_LMDBS.set(fullDbPath, databases);
+   }
+@@ -138,12 +140,14 @@ function getNodesByType(type) {
+ function iterateNodes() {
+   // Additionally fetching items by id to leverage lmdb-store cache
+   const nodesDb = getDatabases().nodes;
++  console.log(`lmdb-datastore: iterateNodes`)
+   return new _iterable.GatsbyIterable(nodesDb.getKeys({
+     snapshot: false
+   }).map(nodeId => typeof nodeId === `string` ? getNode(nodeId) : undefined).filter(Boolean));
+ }
+ function iterateNodesByType(type) {
+   const nodesByType = getDatabases().nodesByType;
++  console.log(`lmdb-datastore: iterateNodesByType`, { type })
+   return new _iterable.GatsbyIterable(nodesByType.getValues(type).map(nodeId => getNode(nodeId)).filter(Boolean));
+ }
+ function getNode(id) {
+@@ -153,13 +157,16 @@ function getNode(id) {
+   const {
+     nodes
+   } = getDatabases();
++  console.log(`lmdb-datastore: getNode`, { id })
+   return nodes.get(id);
+ }
+ function getTypes() {
++  console.log(`lmdb-datastore: getTypes`)
+   return getDatabases().nodesByType.getKeys({}).asArray;
+ }
+ function countNodes(typeName) {
+   if (!typeName) {
++    console.log(`lmdb-datastore: countNodes`, { typeName })
+     const stats = getDatabases().nodes.getStats();
+     return Math.max(Number(stats.entryCount) - preSyncDeletedNodeIdsCache.size, 0); // FIXME: add -1 when restoring shared structures key
+   }
+@@ -167,6 +174,7 @@ function countNodes(typeName) {
+   const {
+     nodesByType
+   } = getDatabases();
++  console.log(`lmdb-datastore: countNodes`, { typeName })
+   return nodesByType.getValuesCount(typeName);
+ }
+ async function runQuery(args) {
+@@ -177,6 +185,7 @@ async function runQuery(args) {
+       ...args
+     });
+   }
++  console.log(`lmdb-datastore: runQuery`, { args })
+   return Promise.resolve((0, _runFastFilters.runFastFiltersAndSort)(args));
+ }
+ let lastOperationPromise = Promise.resolve();
 diff --git a/node_modules/gatsby/dist/schema/graphql-engine/bundle-webpack.js b/node_modules/gatsby/dist/schema/graphql-engine/bundle-webpack.js
 index b328a20..0a47f56 100644
 --- a/node_modules/gatsby/dist/schema/graphql-engine/bundle-webpack.js
