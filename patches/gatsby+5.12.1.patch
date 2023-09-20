@@ -22,26 +22,30 @@ index 41969dc..f2b4a60 100644
      await adapterManager.storeCache();
    }
 diff --git a/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js b/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
-index 17b1e3a..6ef7998 100644
+index 17b1e3a..75556a0 100644
 --- a/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
 +++ b/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
-@@ -74,6 +74,7 @@ function getDatabases() {
+@@ -74,6 +74,9 @@ function getDatabases() {
      if (databases) {
        return databases;
      }
-+    console.log(`-> opening dbs`)
++    if (process.env.GATSBY_LMDB_LOGS) {
++      console.log(`-> opening dbs`)
++    }
      const rootDb = getRootDb();
      databases = {
        nodes: rootDb.openDB({
-@@ -102,6 +103,7 @@ function getDatabases() {
+@@ -102,6 +105,9 @@ function getDatabases() {
          // dupSort: true
        })
      };
-+    console.log(`-> opened dbs`)
++    if (process.env.GATSBY_LMDB_LOGS) {
++      console.log(`-> opened dbs`)
++    }
  
      globalThis.__GATSBY_OPEN_LMDBS.set(fullDbPath, databases);
    }
-@@ -138,12 +140,18 @@ function getNodesByType(type) {
+@@ -138,12 +144,18 @@ function getNodesByType(type) {
  function iterateNodes() {
    // Additionally fetching items by id to leverage lmdb-store cache
    const nodesDb = getDatabases().nodes;
@@ -60,7 +64,7 @@ index 17b1e3a..6ef7998 100644
    return new _iterable.GatsbyIterable(nodesByType.getValues(type).map(nodeId => getNode(nodeId)).filter(Boolean));
  }
  function getNode(id) {
-@@ -153,13 +161,22 @@ function getNode(id) {
+@@ -153,13 +165,22 @@ function getNode(id) {
    const {
      nodes
    } = getDatabases();
@@ -83,7 +87,7 @@ index 17b1e3a..6ef7998 100644
      const stats = getDatabases().nodes.getStats();
      return Math.max(Number(stats.entryCount) - preSyncDeletedNodeIdsCache.size, 0); // FIXME: add -1 when restoring shared structures key
    }
-@@ -167,6 +184,9 @@ function countNodes(typeName) {
+@@ -167,6 +188,9 @@ function countNodes(typeName) {
    const {
      nodesByType
    } = getDatabases();
@@ -93,15 +97,17 @@ index 17b1e3a..6ef7998 100644
    return nodesByType.getValuesCount(typeName);
  }
  async function runQuery(args) {
-@@ -177,6 +197,7 @@ async function runQuery(args) {
+@@ -177,6 +201,9 @@ async function runQuery(args) {
        ...args
      });
    }
-+  console.log(`lmdb-datastore: runQuery`, { args })
++  if (process.env.GATSBY_LMDB_LOGS) {
++    console.log(`lmdb-datastore: runQuery`, { args })
++  }
    return Promise.resolve((0, _runFastFilters.runFastFiltersAndSort)(args));
  }
  let lastOperationPromise = Promise.resolve();
-@@ -184,6 +205,9 @@ function updateDataStore(action) {
+@@ -184,6 +211,9 @@ function updateDataStore(action) {
    switch (action.type) {
      case `DELETE_CACHE`:
        {
@@ -111,7 +117,7 @@ index 17b1e3a..6ef7998 100644
          const dbs = getDatabases();
          // Force sync commit
          dbs.nodes.transactionSync(() => {
-@@ -196,6 +220,9 @@ function updateDataStore(action) {
+@@ -196,6 +226,9 @@ function updateDataStore(action) {
        }
      case `SET_PROGRAM`:
        {
@@ -121,7 +127,7 @@ index 17b1e3a..6ef7998 100644
          // TODO: remove this when we have support for incremental indexes in lmdb
          clearIndexes();
          break;
-@@ -206,6 +233,9 @@ function updateDataStore(action) {
+@@ -206,6 +239,9 @@ function updateDataStore(action) {
      case `ADD_CHILD_NODE_TO_PARENT_NODE`:
      case `MATERIALIZE_PAGE_MODE`:
        {
