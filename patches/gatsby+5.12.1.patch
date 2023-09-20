@@ -22,7 +22,7 @@ index 41969dc..d399f2b 100644
      await adapterManager.storeCache();
    }
 diff --git a/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js b/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
-index 17b1e3a..2ed14b4 100644
+index 17b1e3a..184d16d 100644
 --- a/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
 +++ b/node_modules/gatsby/dist/datastore/lmdb/lmdb-datastore.js
 @@ -74,6 +74,7 @@ function getDatabases() {
@@ -89,6 +89,30 @@ index 17b1e3a..2ed14b4 100644
    return Promise.resolve((0, _runFastFilters.runFastFiltersAndSort)(args));
  }
  let lastOperationPromise = Promise.resolve();
+@@ -184,6 +193,7 @@ function updateDataStore(action) {
+   switch (action.type) {
+     case `DELETE_CACHE`:
+       {
++        console.log(`lmdb-datastore: DELETE_CACHE`)
+         const dbs = getDatabases();
+         // Force sync commit
+         dbs.nodes.transactionSync(() => {
+@@ -196,6 +206,7 @@ function updateDataStore(action) {
+       }
+     case `SET_PROGRAM`:
+       {
++        console.log(`lmdb-datastore: clearIndexes`)
+         // TODO: remove this when we have support for incremental indexes in lmdb
+         clearIndexes();
+         break;
+@@ -206,6 +217,7 @@ function updateDataStore(action) {
+     case `ADD_CHILD_NODE_TO_PARENT_NODE`:
+     case `MATERIALIZE_PAGE_MODE`:
+       {
++        console.log(`lmdb-datastore: node action`, { action })
+         var _action$payload;
+         const dbs = getDatabases();
+         const operationPromise = Promise.all([(0, _nodes.updateNodes)(dbs.nodes, action), (0, _nodesByType.updateNodesByType)(dbs.nodesByType, action)]);
 diff --git a/node_modules/gatsby/dist/schema/.DS_Store b/node_modules/gatsby/dist/schema/.DS_Store
 new file mode 100644
 index 0000000..05c7d6b
