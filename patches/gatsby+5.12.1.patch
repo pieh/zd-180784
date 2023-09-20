@@ -1,5 +1,5 @@
 diff --git a/node_modules/gatsby/dist/commands/build.js b/node_modules/gatsby/dist/commands/build.js
-index 41969dc..d399f2b 100644
+index 41969dc..f2b4a60 100644
 --- a/node_modules/gatsby/dist/commands/build.js
 +++ b/node_modules/gatsby/dist/commands/build.js
 @@ -543,6 +543,18 @@ externalTelemetryAttributes) {
@@ -9,7 +9,7 @@ index 41969dc..d399f2b 100644
 +    for (const [
 +          dbPath,
 +          rootDb,
-+    ] of this.global.__GATSBY_OPEN_ROOT_LMDBS.entries()) {
++    ] of global.__GATSBY_OPEN_ROOT_LMDBS.entries()) {
 +      console.log(`-> closing db ${dbPath}`)
 +      if (rootDb.isOperational()) {
 +            console.log(`-> is operational ${dbPath}`)
