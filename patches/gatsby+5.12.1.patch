@@ -575,7 +575,7 @@ index 7360eda..7f7d960 100644
  }
  exports.default = GatsbyCacheLmdb;
 diff --git a/node_modules/gatsby/dist/utils/page-ssr-module/lambda.js b/node_modules/gatsby/dist/utils/page-ssr-module/lambda.js
-index 8b64e41..363fc69 100644
+index 8b64e41..043bdd0 100644
 --- a/node_modules/gatsby/dist/utils/page-ssr-module/lambda.js
 +++ b/node_modules/gatsby/dist/utils/page-ssr-module/lambda.js
 @@ -1,5 +1,7 @@
@@ -586,21 +586,27 @@ index 8b64e41..363fc69 100644
  exports.__esModule = true;
  exports.default = void 0;
  var path = _interopRequireWildcard(require("path"));
-@@ -14,6 +16,13 @@ var _linkfs = require("linkfs");
+@@ -14,6 +16,19 @@ var _linkfs = require("linkfs");
  function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
  function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
  const cdnDatastore = `%CDN_DATASTORE_PATH%`;
 +console.log({ cdnDatastore })
++
++async function checkLdd() {
 +  try {
 +    const { stdout, stderr } = await require("execa")("ldd", ["--version"]);
 +    console.log(`execa`, { stdout, stderr });
 +  } catch (error) {
 +    console.log(`execa`, { error });
 +  }
++}
++
++checkLdd()
++
  function setupFsWrapper() {
    // setup global._fsWrapper
    try {
-@@ -107,8 +116,10 @@ async function getEngine() {
+@@ -107,8 +122,10 @@ async function getEngine() {
          reject(error);
        });
      });
