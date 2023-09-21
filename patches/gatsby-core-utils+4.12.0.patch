@@ -1,0 +1,13 @@
+diff --git a/node_modules/gatsby-core-utils/dist/utils/get-storage.js b/node_modules/gatsby-core-utils/dist/utils/get-storage.js
+index e8e5edd..9ca61fe 100644
+--- a/node_modules/gatsby-core-utils/dist/utils/get-storage.js
++++ b/node_modules/gatsby-core-utils/dist/utils/get-storage.js
+@@ -19,7 +19,7 @@ let rootDb;
+ function getDatabaseDir() {
+   var _global$__GATSBY$root, _global$__GATSBY;
+   const rootDir = (_global$__GATSBY$root = (_global$__GATSBY = global.__GATSBY) === null || _global$__GATSBY === void 0 ? void 0 : _global$__GATSBY.root) !== null && _global$__GATSBY$root !== void 0 ? _global$__GATSBY$root : process.cwd();
+-  return _path.default.join(rootDir, `.cache`, `data`, `gatsby-core-utils`);
++  return _path.default.join(rootDir, `.cache`, `data`, `gatsby-core-utils`).replace(`/var/task`, `/tmp/gatsby`);
+ }
+ function getStorage(fullDbPath) {
+   if (!databases) {
