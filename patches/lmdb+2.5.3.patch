@@ -1,0 +1,24 @@
+diff --git a/node_modules/lmdb/dist/index.cjs b/node_modules/lmdb/dist/index.cjs
+index 1f80b4f..61bad04 100644
+--- a/node_modules/lmdb/dist/index.cjs
++++ b/node_modules/lmdb/dist/index.cjs
+@@ -1993,6 +1993,7 @@ const allDbs = new Map();
+ let defaultCompression;
+ let hasRegisteredOnExit;
+ function open(path$1, options) {
++	console.trace(`lmdb.open()2`, { path })
+ 	if (!keyBytes) // TODO: Consolidate get buffer and key buffer (don't think we need both)
+ 		allocateFixedBuffer();
+ 	if (typeof path$1 == 'object' && !options) {
+diff --git a/node_modules/lmdb/open.js b/node_modules/lmdb/open.js
+index be6e653..0f9b13a 100644
+--- a/node_modules/lmdb/open.js
++++ b/node_modules/lmdb/open.js
+@@ -27,6 +27,7 @@ let defaultCompression;
+ let lastSize;
+ let hasRegisteredOnExit;
+ export function open(path, options) {
++	console.trace(`lmdb.open()1`, { path })
+ 	if (!keyBytes) // TODO: Consolidate get buffer and key buffer (don't think we need both)
+ 		allocateFixedBuffer();
+ 	if (typeof path == 'object' && !options) {
